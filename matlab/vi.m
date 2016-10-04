@@ -59,6 +59,13 @@ set(handles.yPosTextFieldConsigna, 'Visible', 'off');
 set(handles.xPosInputConsigna, 'Visible', 'off');
 set(handles.yPosInputConsigna, 'Visible', 'off');
 
+set(handles.xPosTextFieldJacobiana, 'Visible', 'off');
+set(handles.yPosTextFieldJacobiana, 'Visible', 'off');
+set(handles.xPosInputJacobiana, 'Visible', 'off');
+set(handles.yPosInputJacobiana, 'Visible', 'off');
+set(handles.timeField, 'Visible', 'off');
+set(handles.timeInput, 'Visible', 'off');
+
 set(handles.simulateButton, 'visible', 'off');
 % Choose default command line output for vi
 handles.output = hObject;
@@ -92,30 +99,8 @@ function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 estadoConsigna = get(handles.articularButton,'Value');
 display(estadoConsigna)
 
-% Modificamos la visualizacion segun la opcion escogida
-if (estadoConsigna == 1)
-    set(handles.q1textFieldConsigna, 'Visible', 'on');
-    set(handles.q2textFieldConsigna, 'Visible', 'on');
-    set(handles.q1InputConsigna, 'Visible', 'on');
-    set(handles.q2InputConsigna, 'Visible', 'on');
-    
-    set(handles.xPosTextFieldConsigna, 'Visible', 'off');
-    set(handles.yPosTextFieldConsigna, 'Visible', 'off');
-    set(handles.xPosInputConsigna, 'Visible', 'off');
-    set(handles.yPosInputConsigna, 'Visible', 'off');
-    
-else
-    set(handles.q1textFieldConsigna, 'Visible', 'off');
-    set(handles.q2textFieldConsigna, 'Visible', 'off');
-    set(handles.q1InputConsigna, 'Visible', 'off');
-    set(handles.q2InputConsigna, 'Visible', 'off');
-    
-    set(handles.xPosTextFieldConsigna, 'Visible', 'on');
-    set(handles.yPosTextFieldConsigna, 'Visible', 'on');
-    set(handles.xPosInputConsigna, 'Visible', 'on');
-    set(handles.yPosInputConsigna, 'Visible', 'on');
-    
-end
+
+
 
 % --- Funcion para el boton conectar
 function connectButton_Callback(hObject, eventdata, handles)
@@ -143,11 +128,12 @@ function articularButton_Callback(hObject, eventdata, handles)
 % --- Executes on button press in simulateButton.
 function simulateButton_Callback(hObject, eventdata, handles)
 %Comprobacion de que se ha introducido un valor numerico en las cosignas
-estadoConsigna = get(handles.articularButton,'Value');
-disp(estadoConsigna);
+global orden;
+%estadoConsigna = get(handles.articularButton,'Value');
+%disp(estadoConsigna);
 
 %ExtremoDelRobot
-if(estadoConsigna ~= 1)
+if(orden == 1)
     valor1 = get(handles.xPosInputConsigna, 'String');
     if isempty(str2num(valor1))
         %set(valor1,'string','0');
@@ -169,7 +155,7 @@ if(estadoConsigna ~= 1)
     fprintf(robot, '%s', mensaje) %Send message to Arduino
     
 %Movimiento articular   
-else
+elseif (orden == 0)
     valor1 = get(handles.q1InputConsigna, 'String');
     if isempty(str2num(valor1))
         %set(valor1,'string','0');
@@ -190,4 +176,168 @@ else
     %mensaje = ['2,' num2str(valor1) ',' num2str(vel1) ',' num2str(valor2) ',' num2str(vel2)];
     fprintf(robot, '%s', mensaje) %Send message to Arduino
     
+end
+
+set(handles.mensajeField, 'string', mensaje);
+
+
+% --- Executes on button press in controlArticularButton.
+function controlArticularButton_Callback(hObject, eventdata, handles)
+% hObject    handle to controlArticularButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of controlArticularButton
+
+
+% --- Executes on button press in controlExtremoButton.
+function controlExtremoButton_Callback(hObject, eventdata, handles)
+% hObject    handle to controlExtremoButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of controlExtremoButton
+
+
+% --- Executes on button press in jacobianaButton12.
+function jacobianaButton12_Callback(hObject, eventdata, handles)
+% hObject    handle to jacobianaButton12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of jacobianaButton12
+
+
+% --- Executes when selected object is changed in consignasGroup.
+function consignasGroup_SelectionChangedFcn(hObject, eventdata, handles)
+global orden;
+if hObject == handles.controlArticularButton
+    orden = 1;
+    
+    % Modificamos la visualizacion segun la opcion escogida
+    set(handles.q1textFieldConsigna, 'Visible', 'on');
+    set(handles.q2textFieldConsigna, 'Visible', 'on');
+    set(handles.q1InputConsigna, 'Visible', 'on');
+    set(handles.q2InputConsigna, 'Visible', 'on');
+    
+    set(handles.xPosTextFieldConsigna, 'Visible', 'off');
+    set(handles.yPosTextFieldConsigna, 'Visible', 'off');
+    set(handles.xPosInputConsigna, 'Visible', 'off');
+    set(handles.yPosInputConsigna, 'Visible', 'off');
+    
+    set(handles.xPosTextFieldJacobiana, 'Visible', 'off');
+    set(handles.yPosTextFieldJacobiana, 'Visible', 'off');
+    set(handles.xPosInputJacobiana, 'Visible', 'off');
+    set(handles.yPosInputJacobiana, 'Visible', 'off');
+    set(handles.timeField, 'Visible', 'off');
+    set(handles.timeInput, 'Visible', 'off');
+
+elseif hObject == handles.controlExtremoButton
+    orden = 2;
+    set(handles.q1textFieldConsigna, 'Visible', 'off');
+    set(handles.q2textFieldConsigna, 'Visible', 'off');
+    set(handles.q1InputConsigna, 'Visible', 'off');
+    set(handles.q2InputConsigna, 'Visible', 'off');
+    
+    set(handles.xPosTextFieldConsigna, 'Visible', 'on');
+    set(handles.yPosTextFieldConsigna, 'Visible', 'on');
+    set(handles.xPosInputConsigna, 'Visible', 'on');
+    set(handles.yPosInputConsigna, 'Visible', 'on');
+    
+    set(handles.xPosTextFieldJacobiana, 'Visible', 'off');
+    set(handles.yPosTextFieldJacobiana, 'Visible', 'off');
+    set(handles.xPosInputJacobiana, 'Visible', 'off');
+    set(handles.yPosInputJacobiana, 'Visible', 'off');
+    set(handles.timeField, 'Visible', 'off');
+    set(handles.timeInput, 'Visible', 'off');
+    
+else 
+    orden = 3;
+    set(handles.q1textFieldConsigna, 'Visible', 'off');
+    set(handles.q2textFieldConsigna, 'Visible', 'off');
+    set(handles.q1InputConsigna, 'Visible', 'off');
+    set(handles.q2InputConsigna, 'Visible', 'off');
+    
+    set(handles.xPosTextFieldConsigna, 'Visible', 'off');
+    set(handles.yPosTextFieldConsigna, 'Visible', 'off');
+    set(handles.xPosInputConsigna, 'Visible', 'off');
+    set(handles.yPosInputConsigna, 'Visible', 'off');
+    
+    set(handles.xPosTextFieldJacobiana, 'Visible', 'on');
+    set(handles.yPosTextFieldJacobiana, 'Visible', 'on');
+    set(handles.xPosInputJacobiana, 'Visible', 'on');
+    set(handles.yPosInputJacobiana, 'Visible', 'on');
+    set(handles.timeField, 'Visible', 'on');
+    set(handles.timeInput, 'Visible', 'on');
+    
+end
+disp(orden)
+
+
+
+function xPosInputJacobiana_Callback(hObject, eventdata, handles)
+% hObject    handle to xPosInputJacobiana (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of xPosInputJacobiana as text
+%        str2double(get(hObject,'String')) returns contents of xPosInputJacobiana as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function xPosInputJacobiana_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to xPosInputJacobiana (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function yPosInputJacobiana_Callback(hObject, eventdata, handles)
+% hObject    handle to yPosInputJacobiana (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of yPosInputJacobiana as text
+%        str2double(get(hObject,'String')) returns contents of yPosInputJacobiana as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function yPosInputJacobiana_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to yPosInputJacobiana (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function timeInput_Callback(hObject, eventdata, handles)
+% hObject    handle to timeInput (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of timeInput as text
+%        str2double(get(hObject,'String')) returns contents of timeInput as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function timeInput_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to timeInput (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end
