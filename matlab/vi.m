@@ -187,30 +187,12 @@ set(handles.mensajeField, 'string', mensaje);
 
 % --- Executes on button press in controlArticularButton.
 function controlArticularButton_Callback(hObject, eventdata, handles)
-% hObject    handle to controlArticularButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of controlArticularButton
-
 
 % --- Executes on button press in controlExtremoButton.
 function controlExtremoButton_Callback(hObject, eventdata, handles)
-% hObject    handle to controlExtremoButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of controlExtremoButton
-
 
 % --- Executes on button press in jacobianaButton12.
 function jacobianaButton12_Callback(hObject, eventdata, handles)
-% hObject    handle to jacobianaButton12 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of jacobianaButton12
-
 
 % --- Executes when selected object is changed in consignasGroup.
 function consignasGroup_SelectionChangedFcn(hObject, eventdata, handles)
@@ -277,75 +259,29 @@ else
 end
 disp(orden)
 
-
-
 function xPosInputJacobiana_Callback(hObject, eventdata, handles)
-% hObject    handle to xPosInputJacobiana (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of xPosInputJacobiana as text
-%        str2double(get(hObject,'String')) returns contents of xPosInputJacobiana as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function xPosInputJacobiana_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to xPosInputJacobiana (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function yPosInputJacobiana_Callback(hObject, eventdata, handles)
-% hObject    handle to yPosInputJacobiana (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of yPosInputJacobiana as text
-%        str2double(get(hObject,'String')) returns contents of yPosInputJacobiana as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function yPosInputJacobiana_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to yPosInputJacobiana (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 function timeInput_Callback(hObject, eventdata, handles)
-% hObject    handle to timeInput (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of timeInput as text
-%        str2double(get(hObject,'String')) returns contents of timeInput as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function timeInput_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to timeInput (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 % --- Executes on button press in disconnectButton.
 function disconnectButton_Callback(hObject, eventdata, handles)
