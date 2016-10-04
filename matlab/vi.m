@@ -49,6 +49,9 @@ end
 
 % --- Executes just before vi is made visible.
 function vi_OpeningFcn(hObject, eventdata, handles, varargin)
+global orden;
+orden = 1;
+
 set(handles.q1textFieldConsigna, 'Visible', 'on');
 set(handles.q2textFieldConsigna, 'Visible', 'on');
 set(handles.q1InputConsigna, 'Visible', 'on');
@@ -67,6 +70,7 @@ set(handles.timeField, 'Visible', 'off');
 set(handles.timeInput, 'Visible', 'off');
 
 set(handles.simulateButton, 'visible', 'off');
+set(handles.disconnectButton, 'visible', 'off');
 % Choose default command line output for vi
 handles.output = hObject;
 
@@ -99,9 +103,6 @@ function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 estadoConsigna = get(handles.articularButton,'Value');
 display(estadoConsigna)
 
-
-
-
 % --- Funcion para el boton conectar
 function connectButton_Callback(hObject, eventdata, handles)
 clc;
@@ -117,6 +118,9 @@ robot = serial(puerto);
 %Conectamos el objeto al puerto serial
 fopen(robot);
 set(handles.simulateButton, 'visible', 'on');
+set(handles.disconnectButton, 'visible', 'on');
+set(handles.connectButton, 'visible', 'off');
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -128,12 +132,12 @@ function articularButton_Callback(hObject, eventdata, handles)
 % --- Executes on button press in simulateButton.
 function simulateButton_Callback(hObject, eventdata, handles)
 %Comprobacion de que se ha introducido un valor numerico en las cosignas
-global orden;
+global orden; global robot;
 %estadoConsigna = get(handles.articularButton,'Value');
 %disp(estadoConsigna);
 
 %ExtremoDelRobot
-if(orden == 1)
+if(orden == 2)
     valor1 = get(handles.xPosInputConsigna, 'String');
     if isempty(str2num(valor1))
         %set(valor1,'string','0');
@@ -155,7 +159,7 @@ if(orden == 1)
     fprintf(robot, '%s', mensaje) %Send message to Arduino
     
 %Movimiento articular   
-elseif (orden == 0)
+elseif (orden == 1)
     valor1 = get(handles.q1InputConsigna, 'String');
     if isempty(str2num(valor1))
         %set(valor1,'string','0');
@@ -341,3 +345,13 @@ function timeInput_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in disconnectButton.
+function disconnectButton_Callback(hObject, eventdata, handles)
+global robot;
+fclose(robot);
+msgbox('Conexion cerrada');
+set(handles.connectButton, 'visible', 'on');
+set(handles.simulateButton, 'visible', 'off');
+set(handles.disconnectButton, 'visible', 'off');
