@@ -69,7 +69,7 @@ set(handles.yPosInputJacobiana, 'Visible', 'off');
 set(handles.timeField, 'Visible', 'off');
 set(handles.timeInput, 'Visible', 'off');
 
-set(handles.simulateButton, 'visible', 'off');
+%set(handles.simulateButton, 'visible', 'off');
 set(handles.disconnectButton, 'visible', 'off');
 % Choose default command line output for vi
 handles.output = hObject;
@@ -174,16 +174,33 @@ elseif (orden == 1)
     %Llamamos a la funcion set_xy_actual
     [valorq1, valorq2] = controlArticularFunc(valor1, valor2);
     velq1 = 100; velq2 = 100;
-    codigo = 2;
+    codigo = 3;
     mensaje = enviarMensajeFunc(codigo, valorq1, velq1, valorq2, velq2);
     %mensaje = [codigo, valorq1, velq1, valorq2, velq2]
     %mensaje = ['2,' num2str(valor1) ',' num2str(vel1) ',' num2str(valor2) ',' num2str(vel2)];
     fprintf(robot, '%s', mensaje) %Send message to Arduino
     
 end
-
 set(handles.mensajeField, 'string', mensaje);
-
+flag = 0; exit = 0; s1 = 'OK';
+%mensaje = '2,000,000,000,000';
+fprintf(robot, '%s', mensaje); %Send message to Arduino
+mensaje = fscanf(robot) 
+% while(exit == 0)
+%     if(length(mensaje) >= 11)
+%         mensaje = fscanf(robot);
+%         flag = 1;
+%     elseif((strcmp(s1,strcat(mensaje)) == 1) && (flag == 1))
+%         exit = 1;
+%         flag = 0;
+%         return;
+%     else
+%         mensaje = fscanf(robot);
+%     end
+% end
+recepcion = strsplit(mensaje)
+set(handles.q1gradsText, 'string', recepcion(1));
+set(handles.q2gradsText, 'string', recepcion(2));
 
 % --- Executes on button press in controlArticularButton.
 function controlArticularButton_Callback(hObject, eventdata, handles)

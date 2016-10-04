@@ -3,6 +3,7 @@
     Orden 1: setPosition -> Establece a 0 los contadores de los encoders
     Orden 2: getPosition -> Obtiene la posición en la que encuentran los encoders
     Orden 3: movement -> Envía las consignas de movimiento a los motores.
+    Orden 4: jacobiana
 */
 
 void modo(String first) {
@@ -23,8 +24,8 @@ void modo(String first) {
     case 2:
       motor1pos = motor1.getCurrentPosition(); motor1pos = motor1.getCurrentPosition();
       motor2pos = motor2.getCurrentPosition(); motor2pos = motor2.getCurrentPosition();
-      while ((abs(motor2pos - motor2posOld)) > 20) {
-        Serial.println("Leyendo de nuevo");
+      while ((abs(motor2pos - motor2posOld)) > 5) {
+        //Serial.println("Leyendo de nuevo");
         motor2pos = motor2.getCurrentPosition();
         delay(100);
       }
@@ -43,12 +44,12 @@ void modo(String first) {
         motor2.moveTo(motor2pos, motor2velError);
         motor2posActual = motor2.getCurrentPosition(); //motor2posActual = motor2.getCurrentPosition();
         motor2error = abs(motor2pos - motor2posActual);
-        Serial.print("Posicion motor2: ");   Serial.print(motor2posActual); Serial.print(" ");
-        Serial.print("Error motor 2: ");     Serial.print(motor2error);     Serial.print(" ");
-        Serial.print("Velocidad motor 2: "); Serial.println(motor2velError);
+        //Serial.print("Posicion motor2: ");   Serial.print(motor2posActual); Serial.print(" ");
+        //Serial.print("Error motor 2: ");     Serial.print(motor2error);     Serial.print(" ");
+        //Serial.print("Velocidad motor 2: "); Serial.println(motor2velError);
         i++;
         if (i > iteraciones) {
-          Serial.println("Posicion no alcanzada");
+          //Serial.println("Posicion no alcanzada");
           break;
         }
         motor2velError = motor2vel * motor2error;
@@ -82,16 +83,16 @@ void modo(String first) {
 // Funcion para la lectura del encoder, para intentar evitar la lectura de 0.0 aleatoria, se incluye la variable posDeseada
 // Con ella se intenta dar un margen de seguridad a la medida. En ella se debe enviar el valor de la posicion deseada.
 float motor1lecturaEncoder(int motor1pos, int posDeseada) {
-  while ((abs(motor1pos - posDeseada)) > 20) {
-    Serial.println("Leyendo de nuevo");
+  while ((abs(motor1pos - posDeseada)) > 5) {
+    //Serial.println("Leyendo de nuevo");
     motor1pos = motor1.getCurrentPosition();
     delay(100);
   }
   return motor1pos;
 }
 float motor2lecturaEncoder(int motor2pos, int posDeseada) {
-  while ((abs(motor2pos - posDeseada)) > 20) {
-    Serial.println("Leyendo de nuevo");
+  while ((abs(motor2pos - posDeseada)) > 5) {
+    //Serial.println("Leyendo de nuevo");
     motor2pos = motor2.getCurrentPosition();
     delay(100);
   }
