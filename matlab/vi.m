@@ -1,29 +1,32 @@
+% Programa principal de la interfaz, registra lo que se selecciona en ella
+% y desvia a la funciones externas para que los alumnos modifiquen lo menos
+% posible la interfaz.
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% La funcion: controlArticularFunc.m se debe utilizar para el desarrollo
+% del control articular del robot.
+
+% La funcion: controlExtremoFunc.m se debe utilizar para el desarrollo de
+% la cinematica inversa del robot, es decir, la del posicionamiento del
+% extremo del robot.
+
+% La comunicacion con Arduino se realiza mediante la funcion
+% enviarMensajeFunc.m en ella se debe de formalizar el mensaje para Arduino
+% con la siguiente estructura:
+
+% mensaje = [codigo, valorq1, velocidadq1, valorq2, velocidadq2] % string
+
+% ademas, cada valor del string tiene que tener unos determinados
+% caracteres para que la comunicacion sea mas robusta.
+
+% mensaje = [X, XXX, XXX, XXX, XXX]
+
+% Seleccion del puerto: Si el programa no se ha podido conectar
+% correctamente con el Arduino no permitira el envio de ningun comando al
+% mismo.
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function varargout = vi(varargin)
-% VI MATLAB code for vi.fig
-%      VI, by itself, creates a new VI or raises the existing
-%      singleton*.
-%
-%      H = VI returns the handle to a new VI or the handle to
-%      the existing singleton*.
-%
-%      VI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in VI.M with the given input arguments.
-%
-%      VI('Property','Value',...) creates a new VI or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before vi_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to vi_OpeningFcn via varargin.
-%
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help vi
-
-% Last Modified by GUIDE v2.5 06-Sep-2016 15:35:19
-
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
@@ -46,22 +49,17 @@ end
 
 % --- Executes just before vi is made visible.
 function vi_OpeningFcn(hObject, eventdata, handles, varargin)
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to vi (see VARARGIN)
-    set(handles.q1textFieldConsigna, 'Visible', 'on');
-    set(handles.q2textFieldConsigna, 'Visible', 'on');
-    set(handles.q1InputConsigna, 'Visible', 'on');
-    set(handles.q2InputConsigna, 'Visible', 'on');
-    
-    set(handles.xPosTextFieldConsigna, 'Visible', 'off');
-    set(handles.yPosTextFieldConsigna, 'Visible', 'off');
-    set(handles.xPosInputConsigna, 'Visible', 'off');
-    set(handles.yPosInputConsigna, 'Visible', 'off');
-    
-    set(handles.simulateButton, 'visible', 'off');
+set(handles.q1textFieldConsigna, 'Visible', 'on');
+set(handles.q2textFieldConsigna, 'Visible', 'on');
+set(handles.q1InputConsigna, 'Visible', 'on');
+set(handles.q2InputConsigna, 'Visible', 'on');
+
+set(handles.xPosTextFieldConsigna, 'Visible', 'off');
+set(handles.yPosTextFieldConsigna, 'Visible', 'off');
+set(handles.xPosInputConsigna, 'Visible', 'off');
+set(handles.yPosInputConsigna, 'Visible', 'off');
+
+set(handles.simulateButton, 'visible', 'off');
 % Choose default command line output for vi
 handles.output = hObject;
 
@@ -74,33 +72,12 @@ guidata(hObject, handles);
 
 % --- Outputs from this function are returned to the command line.
 function varargout = vi_OutputFcn(hObject, eventdata, handles) 
-% varargout  cell array for returning output args (see VARARGOUT);
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Get default command line output from handles structure
 varargout{1} = handles.output;
 
-
-
 function serialPortField_Callback(hObject, eventdata, handles)
-% hObject    handle to serialPortField (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of serialPortField as text
-%        str2double(get(hObject,'String')) returns contents of serialPortField as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function serialPortField_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to serialPortField (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
@@ -113,7 +90,7 @@ function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 %   1 = control articular del robot
 %   0 = control de la posicion del extremo del robot
 estadoConsigna = get(handles.articularButton,'Value');
-%display(estadoConsigna)
+display(estadoConsigna)
 
 % Modificamos la visualizacion segun la opcion escogida
 if (estadoConsigna == 1)
@@ -139,8 +116,6 @@ else
     set(handles.yPosInputConsigna, 'Visible', 'on');
     
 end
- 
-
 
 % --- Funcion para el boton conectar
 function connectButton_Callback(hObject, eventdata, handles)
@@ -161,20 +136,15 @@ set(handles.simulateButton, 'visible', 'on');
 
 % --- Executes during object creation, after setting all properties.
 function uibuttongroup1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to uibuttongroup1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
 
 % --- Executes on button press in articularButton.
 function articularButton_Callback(hObject, eventdata, handles)
-
-
 
 % --- Executes on button press in simulateButton.
 function simulateButton_Callback(hObject, eventdata, handles)
 %Comprobacion de que se ha introducido un valor numerico en las cosignas
 estadoConsigna = get(handles.articularButton,'Value');
+disp(estadoConsigna);
 
 %ExtremoDelRobot
 if(estadoConsigna ~= 1)
@@ -221,5 +191,3 @@ else
     fprintf(robot, '%s', mensaje) %Send message to Arduino
     
 end
-
-%Actualizamos las
