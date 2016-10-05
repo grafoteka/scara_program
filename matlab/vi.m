@@ -160,6 +160,7 @@ if(orden == 2)
     
 %Movimiento articular   
 elseif (orden == 1)
+    % Comprobacion de si hay valores numericos en las consignas
     valor1 = get(handles.q1InputConsigna, 'String');
     if isempty(str2num(valor1))
         %set(valor1,'string','0');
@@ -172,8 +173,22 @@ elseif (orden == 1)
     end
     
     %Llamamos a la funcion set_xy_actual
-    [valorq1, valorq2] = controlArticularFunc(valor1, valor2);
-    velq1 = 100; velq2 = 100;
+    [valorq1, valorq2, velq1, velq2] = controlArticularFunc(valor1, valor2);
+    % velq1 = 100; velq2 = 100;
+    
+    %%
+    %Condiciones de seguridad para q1
+    if((valorq1 > 180) || (valorq1 < 0))
+        warndlg('El valor de q1 debe estar entre 0 y 180');
+        return;
+    end
+    %Condiciones de seguridad para q2
+    if((valorq2 > 90) || (valorq2 < -90))
+        warndlg('El valor de q2 debe estar entre -90 y 90');
+        return;
+    end
+    
+    %%
     codigo = 3;
     mensaje = enviarMensajeFunc(codigo, valorq1, velq1, valorq2, velq2);
     %mensaje = [codigo, valorq1, velq1, valorq2, velq2]
@@ -186,21 +201,8 @@ flag = 0; exit = 0; s1 = 'OK';
 %mensaje = '2,000,000,000,000';
 fprintf(robot, '%s', mensaje); %Send message to Arduino
 mensaje = fscanf(robot) 
-% while(exit == 0)
-%     if(length(mensaje) >= 11)
-%         mensaje = fscanf(robot);
-%         flag = 1;
-%     elseif((strcmp(s1,strcat(mensaje)) == 1) && (flag == 1))
-%         exit = 1;
-%         flag = 0;
-%         return;
-%     else
-%         mensaje = fscanf(robot);
-%     end
-% end
-recepcion = strsplit(mensaje)
-set(handles.q1gradsText, 'string', recepcion(1));
-set(handles.q2gradsText, 'string', recepcion(2));
+encodersEscritura(hObject, eventdata, handles, mensaje);
+
 
 % --- Executes on button press in controlArticularButton.
 function controlArticularButton_Callback(hObject, eventdata, handles)
@@ -308,3 +310,36 @@ msgbox('Conexion cerrada');
 set(handles.connectButton, 'visible', 'on');
 set(handles.simulateButton, 'visible', 'off');
 set(handles.disconnectButton, 'visible', 'off');
+
+
+% --- Executes on button press in encodersButton.
+function encodersButton_Callback(hObject, eventdata, handles)
+global robot;
+mensaje = '2,000,000,000,000';
+set(handles.mensajeField, 'string', mensaje);
+fprintf(robot, '%s', mensaje); %Send message to Arduino
+mensaje = fscanf(robot)
+encodersEscritura(hObject, eventdata, handles, mensaje);
+
+
+function encodersEscritura(hObject, eventdata, handles, mensaje)
+recepcion = strsplit(mensaje)
+set(handles.q1gradsText, 'string', recepcion(1));
+set(handles.q2gradsText, 'string', recepcion(2));
+posExtremo(hObject, eventdata, handles, mensaje)
+
+%Funcion para convertir las coordenadas articulares en la posicion del
+%extremo del robot
+function posExtremo(hObject, eventdata, handles, mensaje)
+%Separamos el mensaje
+mensaje = strsplit(mensaje)
+%Posicion de cada motor
+q1 = str2double(mensaje(1)); q2 = str2double(mensaje(2));
+%Longitudes de los brazos del robot
+l1 = 110; l2 = 60;
+x = l1*cos(deg2rad(q1)) + l2*cos(deg2rad(q1+q2));
+x = round((x*100))/100
+y = l1*sin(deg2rad(q1)) + l2*sin(deg2rad(q1+q2));
+y = round((y*100))/100
+set(handles.xPosText, 'string', num2str(x));
+set(handles.yPosText, 'string', num2str(y));

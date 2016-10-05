@@ -19,7 +19,7 @@
 MeEncoderMotor motor1(0x09, SLOT1);   //  Motor at slot1
 MeEncoderMotor motor2(0x09, SLOT2);   //  motor at slot2
 
-float motor2posOld = 0.0;
+float motor2posOld = 0.0, motor1posOld = 0.0;
 
 //Serial
 String cadena = "mensaje: ";
